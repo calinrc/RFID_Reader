@@ -1,11 +1,20 @@
-# RFID_Reader - Basic Arduino RFID reader that display results on a Nokia 5110 Display 
+# RFID_Reader - Basic ESP8266 RFID reader that display results on a Nokia 5110 Display 
 
 
 Pinout used 
 
-Arduino - RFID-RF522
+RFID-RF522 - ESP8266
+SDA (SS)   - D4
+SCK        - D5
+MOSI       - D7
+MISO       - D6
+IRQ        - - 
+GND        - G
+RST        - D3
+3.3V (VCC) - 3 V
+ 
 
-Arduino  - LCD 5110
+LCD 5110   - ESP8266
 
 
 

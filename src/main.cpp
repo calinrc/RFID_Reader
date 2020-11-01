@@ -1,5 +1,3 @@
-#include <Arduino.h>
-
 /*
  * --------------------------------------------------------------------------------------------------------------------
  * Example sketch/program showing how to read data from a PICC to serial.
@@ -38,8 +36,8 @@
 #include <SPI.h>
 #include <MFRC522.h>
 
-#define RST_PIN         9          // Configurable, see typical pin layout above
-#define SS_PIN          10         // Configurable, see typical pin layout above
+#define RST_PIN         D3          // Configurable, see typical pin layout above
+#define SS_PIN          D4         // Configurable, see typical pin layout above
 
 MFRC522 mfrc522(SS_PIN, RST_PIN);  // Create MFRC522 instance
 
