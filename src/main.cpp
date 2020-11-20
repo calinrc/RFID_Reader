@@ -35,11 +35,21 @@
 
 #include <SPI.h>
 #include <MFRC522.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_PCD8544.h>
 
 #define RST_PIN         D3          // Configurable, see typical pin layout above
-#define SS_PIN          D4         // Configurable, see typical pin layout above
+#define SS_RFID_PIN 	D4				// Configurable, see typical pin layout above
 
-MFRC522 mfrc522(SS_PIN, RST_PIN);  // Create MFRC522 instance
+// LCD 5110 Software SPI (slower updates, more flexible pin options):
+// D7 - Serial clock out (SCLK)
+// D5 - Serial data out (DIN)
+// D2 - Data/Command select (D/C)
+// D1 - LCD chip select (CS)
+// D0 - LCD reset (RST)
+//Adafruit_PCD8544 display = Adafruit_PCD8544(D7, D5, D2, D1, D0);
+
+MFRC522 mfrc522(SS_RFID_PIN, RST_PIN);  // Create MFRC522 instance
 
 void setup() {
 	Serial.begin(9600);		// Initialize serial communications with the PC

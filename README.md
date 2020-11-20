@@ -17,7 +17,7 @@
 | IRQ        | -        |
 | GND        | G        |
 | RST        | D3       |
-| 3.3V (VCC) | 3V       |
+| 3.3V (VCC) | 3V3      |
  
 </br>
 </br>
@@ -27,4 +27,12 @@
 
 | LCD 5110   | ESP8266  |
 | :---       |:---      |
-| TBD                   |
+| RST        | D0       | - D0
+| CE         | D1       | - D1
+| DC         | D2       | - D2
+| DIN        | D5       | - D3
+| CLK        | D7       | - D4
+| VCC        | 3V3      |
+| BL         | 3V3      |
+| GND        | G        |
+
