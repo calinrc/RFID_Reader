@@ -38,37 +38,69 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_PCD8544.h>
 
-#define RST_PIN         D3          // Configurable, see typical pin layout above
-#define SS_RFID_PIN 	D4				// Configurable, see typical pin layout above
+#define RST_PIN D3	   // Configurable, see typical pin layout above
+#define SS_RFID_PIN D4 // Configurable, see typical pin layout above
+#define SS_LCD_PIN D8  // Configurable, see typical pin layout above
 
 // LCD 5110 Software SPI (slower updates, more flexible pin options):
-// D7 - Serial clock out (SCLK)
-// D5 - Serial data out (DIN)
+// D5 - Serial clock out (SCLK)
+// D7 - Serial data out (DIN)
 // D2 - Data/Command select (D/C)
-// D1 - LCD chip select (CS)
+// D8 - LCD chip select (CS)
 // D0 - LCD reset (RST)
-//Adafruit_PCD8544 display = Adafruit_PCD8544(D7, D5, D2, D1, D0);
+Adafruit_PCD8544 display = Adafruit_PCD8544(D2, D8, D0);
 
-MFRC522 mfrc522(SS_RFID_PIN, RST_PIN);  // Create MFRC522 instance
+MFRC522 mfrc522(SS_RFID_PIN, RST_PIN); // Create MFRC522 instance
 
-void setup() {
-	Serial.begin(9600);		// Initialize serial communications with the PC
-	while (!Serial);		// Do nothing if no serial port is opened (added for Arduinos based on ATMEGA32U4)
-	SPI.begin();			// Init SPI bus
-	mfrc522.PCD_Init();		// Init MFRC522
-	delay(4);				// Optional delay. Some board do need more time after init to be ready, see Readme
-	mfrc522.PCD_DumpVersionToSerial();	// Show details of PCD - MFRC522 Card Reader details
+void setup()
+{
+	Serial.begin(9600); // Initialize serial communications with the PC
+	while (!Serial)
+		;							   // Do nothing if no serial port is opened (added for Arduinos based on ATMEGA32U4)
+	SPI.begin();					   // Init SPI bus
+	mfrc522.PCD_Init();				   // Init MFRC522
+	delay(4);						   // Optional delay. Some board do need more time after init to be ready, see Readme
+	mfrc522.PCD_DumpVersionToSerial(); // Show details of PCD - MFRC522 Card Reader details
 	Serial.println(F("Scan PICC to see UID, SAK, type, and data blocks..."));
+	digitalWrite(SS_RFID_PIN, HIGH);
+
+	display.begin();
+	display.setContrast(50);
+	digitalWrite(SS_LCD_PIN, LOW);
+
+	//  // init done
+
+	// // you can change the contrast around to adapt the display
+	// // for the best viewing!
+
+	// // text display tests
+	display.setTextSize(1);
+	display.setTextColor(BLACK);
+	display.setCursor(0, 0);
+	display.println("Hello, world 123!");
+	display.setTextColor(WHITE, BLACK); // 'inverted' text
+	display.println(3.141592);
+	display.setTextSize(2);
+	display.setTextColor(BLACK);
+	display.print("0x");
+	display.println(0xDEADBEEF, HEX);
+	//display.display();
+	delay(2000);
+	digitalWrite(SS_LCD_PIN, HIGH);
+	digitalWrite(SS_RFID_PIN, LOW);
 }
 
-void loop() {
+void loop()
+{
 	// Reset the loop if no new card present on the sensor/reader. This saves the entire process when idle.
-	if ( ! mfrc522.PICC_IsNewCardPresent()) {
+	if (!mfrc522.PICC_IsNewCardPresent())
+	{
 		return;
 	}
 
 	// Select one of the cards
-	if ( ! mfrc522.PICC_ReadCardSerial()) {
+	if (!mfrc522.PICC_ReadCardSerial())
+	{
 		return;
 	}
 
