@@ -55,37 +55,29 @@ MFRC522 mfrc522(SS_RFID_PIN, RST_PIN); // Create MFRC522 instance
 void setup()
 {
 	Serial.begin(9600); // Initialize serial communications with the PC
-	while (!Serial)
-		;							   // Do nothing if no serial port is opened (added for Arduinos based on ATMEGA32U4)
+	while (!Serial);							   // Do nothing if no serial port is opened (added for Arduinos based on ATMEGA32U4)
 	SPI.begin();					   // Init SPI bus
 	mfrc522.PCD_Init();				   // Init MFRC522
 	delay(4);						   // Optional delay. Some board do need more time after init to be ready, see Readme
 	mfrc522.PCD_DumpVersionToSerial(); // Show details of PCD - MFRC522 Card Reader details
 	Serial.println(F("Scan PICC to see UID, SAK, type, and data blocks..."));
 	digitalWrite(SS_RFID_PIN, HIGH);
-
-	display.begin();
-	display.setContrast(50);
 	digitalWrite(SS_LCD_PIN, LOW);
 
-	//  // init done
+	display.begin();
+	display.setContrast(100);
 
-	// // you can change the contrast around to adapt the display
-	// // for the best viewing!
-
-	// // text display tests
+	display.clearDisplay();
+	// text display tests
+	display.setRotation(2);
 	display.setTextSize(1);
 	display.setTextColor(BLACK);
-	display.setCursor(0, 0);
-	display.println("Hello, world 123!");
+	display.setCursor(0,0);
+	display.println("Hello, world!\n");
 	display.setTextColor(WHITE, BLACK); // 'inverted' text
-	display.println(3.141592);
-	display.setTextSize(2);
-	display.setTextColor(BLACK);
-	display.print("0x");
-	display.println(0xDEADBEEF, HEX);
-	//display.display();
+	display.display();
 	delay(2000);
+
 	digitalWrite(SS_LCD_PIN, HIGH);
 	digitalWrite(SS_RFID_PIN, LOW);
 }
