@@ -51,6 +51,7 @@
 Adafruit_PCD8544 display = Adafruit_PCD8544(D2, D8, D0);
 
 MFRC522 mfrc522(SS_RFID_PIN, RST_PIN); // Create MFRC522 instance
+MFRC522::MIFARE_Key key;
 
 void setup()
 {
@@ -73,8 +74,7 @@ void setup()
 	display.setTextSize(1);
 	display.setTextColor(BLACK);
 	display.setCursor(0,0);
-	display.println("Hello, world!\n");
-	display.setTextColor(WHITE, BLACK); // 'inverted' text
+	display.println("\n\nRFID-RC522\nReader\n\n\n");
 	display.display();
 	delay(2000);
 
@@ -96,6 +96,48 @@ void loop()
 		return;
 	}
 
+
+
+	display.clearDisplay();
 	// Dump debug info about the card; PICC_HaltA() is automatically called
-	mfrc522.PICC_DumpToSerial(&(mfrc522.uid));
+	display.setCursor(0,0);
+	display.println(F("Card UID:"));
+
+	for (byte i = 0; i < mfrc522.uid.size; i++) {
+		if(mfrc522.uid.uidByte[i] < 0x10)
+			display.print(F(" 0"));
+		else
+			display.print(F(" "));
+		display.print(mfrc522.uid.uidByte[i], HEX);
+	} 
+	display.println();
+	
+	// SAK
+	display.print(F("Card SAK: "));
+	if(mfrc522.uid.sak < 0x10)
+		display.print(F("0"));
+	display.println(mfrc522.uid.sak, HEX);
+	
+	// (suggested) PICC type
+	MFRC522::PICC_Type piccType = mfrc522.PICC_GetType(mfrc522.uid.sak);
+	display.println(F("PICC type: "));
+	display.println(mfrc522.PICC_GetTypeName(piccType));
+
+	for (byte i = 0; i < 6; i++) {
+		key.keyByte[i] = 0xFF;
+	}
+
+	digitalWrite(SS_LCD_PIN, LOW);
+	digitalWrite(SS_RFID_PIN, HIGH);
+
+	display.display();
+
+	
+
+	delay(2000);
+
+	digitalWrite(SS_LCD_PIN, HIGH);
+	digitalWrite(SS_RFID_PIN, LOW);
+
+	//mfrc522.PICC_DumpToSerial(&(mfrc522.uid));
 }
