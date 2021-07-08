@@ -1,5 +1,5 @@
 # RFID_Reader 
-Basic ESP8266 RFID reader that display results on a Nokia 5110 Display 
+Basic ESP8266 RFID reader that prints results on a Nokia 5110 display 
 
 
 ## Pinout used 
