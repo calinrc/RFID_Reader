@@ -3,23 +3,23 @@
  * Example sketch/program showing how to read data from a PICC to serial.
  * --------------------------------------------------------------------------------------------------------------------
  * This is a MFRC522 library example; for further details and other examples see: https://github.com/miguelbalboa/rfid
- * 
+ *
  * Example sketch/program showing how to read data from a PICC (that is: a RFID Tag or Card) using a MFRC522 based RFID
  * Reader on the Arduino SPI interface.
- * 
+ *
  * When the Arduino and the MFRC522 module are connected (see the pin layout below), load this sketch into Arduino IDE
  * then verify/compile and upload it. To see the output: use Tools, Serial Monitor of the IDE (hit Ctrl+Shft+M). When
  * you present a PICC (that is: a RFID Tag or Card) at reading distance of the MFRC522 Reader/PCD, the serial output
  * will show the ID/UID, type and any data blocks it can read. Note: you may see "Timeout in communication" messages
  * when removing the PICC from reading distance too early.
- * 
+ *
  * If your reader supports it, this sketch/program will read all the PICCs presented (that is: multiple tag reading).
  * So if you stack two or more PICCs on top of each other and present them to the reader, it will first output all
  * details of the first and then the next PICC. Note that this may take some time as all data blocks are dumped, so
  * keep the PICCs at reading distance until complete.
- * 
+ *
  * @license Released into the public domain.
- * 
+ *
  * Typical pin layout used:
  * -----------------------------------------------------------------------------------------
  *             MFRC522      Arduino       Arduino   Arduino    Arduino          Arduino
@@ -73,8 +73,9 @@ void setup()
 	display.setRotation(2);
 	display.setTextSize(1);
 	display.setTextColor(BLACK);
-	display.setCursor(0,0);
+	display.setCursor(0, 0);
 	display.println("\n\nRFID-RC522\nReader\n\n\n");
+	Serial.println("\n\nRFID-RC522\nReader\n\n\n");
 	display.display();
 	delay(2000);
 
@@ -96,34 +97,49 @@ void loop()
 		return;
 	}
 
-
-
 	display.clearDisplay();
 	// Dump debug info about the card; PICC_HaltA() is automatically called
-	display.setCursor(0,0);
+	display.setCursor(0, 0);
 	display.println(F("Card UID:"));
 
-	for (byte i = 0; i < mfrc522.uid.size; i++) {
-		if(mfrc522.uid.uidByte[i] < 0x10)
+	for (byte i = 0; i < mfrc522.uid.size; i++)
+	{
+		if (mfrc522.uid.uidByte[i] < 0x10)
+		{
 			display.print(F(" 0"));
+			Serial.print(F(" 0"));
+		}
 		else
+		{
 			display.print(F(" "));
+			Serial.print(F(" "));
+		}
 		display.print(mfrc522.uid.uidByte[i], HEX);
-	} 
+		Serial.print(mfrc522.uid.uidByte[i], HEX);
+	}
 	display.println();
-	
+	Serial.println();
+
 	// SAK
 	display.print(F("Card SAK: "));
-	if(mfrc522.uid.sak < 0x10)
+	Serial.print(F("Card SAK: "));
+	if (mfrc522.uid.sak < 0x10)
+	{
 		display.print(F("0"));
+		Serial.print(F("0"));
+	}
 	display.println(mfrc522.uid.sak, HEX);
-	
+	Serial.println(mfrc522.uid.sak, HEX);
+
 	// (suggested) PICC type
 	MFRC522::PICC_Type piccType = mfrc522.PICC_GetType(mfrc522.uid.sak);
 	display.println(F("PICC type: "));
+	Serial.println(F("PICC type: "));
 	display.println(mfrc522.PICC_GetTypeName(piccType));
+	Serial.println(mfrc522.PICC_GetTypeName(piccType));
 
-	for (byte i = 0; i < 6; i++) {
+	for (byte i = 0; i < 6; i++)
+	{
 		key.keyByte[i] = 0xFF;
 	}
 
@@ -132,12 +148,10 @@ void loop()
 
 	display.display();
 
-	
-
 	delay(2000);
 
 	digitalWrite(SS_LCD_PIN, HIGH);
 	digitalWrite(SS_RFID_PIN, LOW);
 
-	//mfrc522.PICC_DumpToSerial(&(mfrc522.uid));
+	// mfrc522.PICC_DumpToSerial(&(mfrc522.uid));
 }
